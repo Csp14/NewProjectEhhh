@@ -80,17 +80,11 @@ export default function ViralMetricsCard({ short }: ViralMetricsCardProps) {
         <div className="absolute bottom-2 right-2 bg-black/80 text-white text-xs px-2 py-1 rounded">
           {short.duration}s
         </div>
-        {/* Data Source Badge */}
+        {/* YouTube Badge */}
         <div className="absolute top-2 right-2">
-          {short.dataSource === 'mock' ? (
-            <span className="bg-orange-500 text-white text-xs px-2 py-1 rounded-full font-medium">
-              Demo
-            </span>
-          ) : (
-            <span className="bg-red-600 text-white text-xs px-2 py-1 rounded-full font-medium">
-              Live
-            </span>
-          )}
+          <span className="bg-red-600 text-white text-xs px-2 py-1 rounded-full font-medium flex items-center gap-1">
+            <span>▶</span> YouTube
+          </span>
         </div>
       </div>
 

@@ -3,7 +3,6 @@ import { youtubeService } from '@/app/lib/services/youtubeService';
 import { ViralScoringEngine } from '@/app/lib/services/viralScoringEngine';
 import { PatternAnalyzer } from '@/app/lib/services/patternAnalyzer';
 import { CacheManager } from '@/app/lib/utils/cacheManager';
-import { MOCK_SHORTS } from '@/app/lib/mockData';
 
 const NICHE_SEARCH_TERMS: Record<string, string> = {
   gaming: 'gaming shorts gameplay english streamer',
@@ -101,7 +100,7 @@ export async function GET(request: NextRequest) {
     ).toISOString();
 
     let shorts: ProcessedShort[] = [];
-    let dataSource: 'youtube' | 'mock' = 'youtube';
+    const dataSource = 'youtube' as const;
     let quotaExceeded = false;
 
     try {
@@ -167,45 +166,31 @@ export async function GET(request: NextRequest) {
 
       if (error instanceof Error && error.message === 'QUOTA_EXCEEDED') {
         quotaExceeded = true;
-        dataSource = 'mock';
-
-        // Use mock data
-        const mockShorts: ProcessedShort[] = MOCK_SHORTS.map((mock) => {
-          const viralMetrics = ViralScoringEngine.calculateViralScore(
-            mock.views,
-            mock.likes,
-            mock.comments,
-            mock.duration,
-            mock.uploadedAt,
-            mock.subscriberCount
-          );
-
-          const hashtags = mock.description.match(/#\w+/g) || [];
-
-          return {
-            id: mock.id,
-            title: mock.title,
-            channelName: mock.channelName,
-            channelId: mock.channelId,
-            subscriberCount: mock.subscriberCount,
-            thumbnail: mock.thumbnail,
-            views: mock.views,
-            likes: mock.likes,
-            comments: mock.comments,
-            uploadedAt: mock.uploadedAt,
-            duration: mock.duration,
-            viralScore: viralMetrics.viralScore,
-            viewsPerHour: viralMetrics.viewsPerHour,
-            likeRatio: viralMetrics.likeRatio,
-            commentVelocity: viralMetrics.commentVelocity,
-            copyInsight: viralMetrics.copyInsight,
-            hashtags: hashtags.slice(0, 10),
-            niche: mock.niche,
-            dataSource: 'mock' as const,
-          };
-        });
-
-        shorts = mockShorts;
+        
+        // Return error response instead of mock data
+        return NextResponse.json(
+          {
+            error: 'YouTube API quota exceeded',
+            message: 'The YouTube API quota has been exceeded. Please try again later or sign in as admin for priority access.',
+            shorts: [],
+            metadata: {
+              totalResults: 0,
+              quotaRemaining: 0,
+              cacheAge: 0,
+              quotaExceeded: true,
+              dataSource: 'youtube',
+            },
+            patterns: {
+              commonHooks: [],
+              avgHashtagCount: 0,
+              avgDuration: 0,
+              peakUploadHours: [],
+              peakUploadDays: [],
+              topNiches: [],
+            },
+          },
+          { status: 429 }
+        );
       } else {
         throw error;
       }

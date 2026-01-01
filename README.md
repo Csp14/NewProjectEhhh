@@ -6,11 +6,13 @@ A production-ready Next.js web application that discovers trending YouTube Short
 
 ### Core Functionality
 - **Real-time Shorts Discovery**: Fetches trending YouTube Shorts (under 60 seconds) using YouTube Data API v3
+- **100% Real Data**: Only displays authentic YouTube videos - no fake or mock data
 - **Viral Score Calculation**: Computes a 0-100 score based on views per hour, like ratio, comment velocity, and more
 - **Pattern Analysis**: Extracts repeatable patterns including hooks, hashtags, timing, and niches
-- **Interactive Dashboard**: Filter by niche, time range, and minimum viral score
-- **Rate Limiting**: Free tier (10 requests/day) and Pro tier (unlimited) support
-- **Graceful Fallback**: Automatically uses realistic mock data if API quota is exceeded
+- **Interactive Dashboard**: Filter by niche, time range, region, and minimum viral score
+- **Region Filtering**: Focus on US/UK/CA/AU content with English language prioritization
+- **Authentication**: Admin login for unlimited API access (bypass rate limits)
+- **Rate Limiting**: Free tier (10 requests/day) and Admin tier (unlimited) support
 
 ### Technical Features
 - ⚡ Built with Next.js 16, React 19, TypeScript, and Tailwind CSS 4

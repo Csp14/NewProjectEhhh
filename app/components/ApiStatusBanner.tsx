@@ -1,7 +1,7 @@
 'use client';
 
 interface ApiStatusBannerProps {
-  status: 'ok' | 'limited' | 'mock' | 'error';
+  status: 'ok' | 'limited' | 'error';
   quotaRemaining: number;
   message?: string;
 }
@@ -29,16 +29,7 @@ export default function ApiStatusBanner({
           text: 'text-yellow-800 dark:text-yellow-200',
           icon: '⚠️',
           title: 'API Quota Low',
-          description: `${quotaRemaining.toLocaleString()} units remaining - may fallback to demo data soon`,
-        };
-      case 'mock':
-        return {
-          bg: 'bg-orange-50 dark:bg-orange-900/20',
-          border: 'border-orange-200 dark:border-orange-800',
-          text: 'text-orange-800 dark:text-orange-200',
-          icon: '🔄',
-          title: 'Using Demo Data',
-          description: 'API quota exceeded - showing realistic mock data. Resets in 24h.',
+          description: `${quotaRemaining.toLocaleString()} units remaining - service may be unavailable soon`,
         };
       case 'error':
         return {

@@ -106,7 +106,11 @@ export default function Home() {
       const response = await fetch(`/api/shorts/trending?${params}`);
 
       if (!response.ok) {
-        throw new Error('Failed to fetch shorts');
+        const errorData = await response.json();
+        if (response.status === 429) {
+          throw new Error(errorData.message || 'YouTube API quota exceeded. Please try again later.');
+        }
+        throw new Error(errorData.message || 'Failed to fetch shorts');
       }
 
       const data = await response.json();
@@ -155,9 +159,9 @@ export default function Home() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const getApiStatus = (): 'ok' | 'limited' | 'mock' | 'error' => {
+  const getApiStatus = (): 'ok' | 'limited' | 'error' => {
     if (error) return 'error';
-    if (metadata?.quotaExceeded) return 'mock';
+    if (metadata?.quotaExceeded) return 'error';
     if (metadata && metadata.quotaRemaining < 1000) return 'limited';
     return 'ok';
   };
@@ -244,12 +248,7 @@ export default function Home() {
         {/* Results Count */}
         {!loading && shorts.length > 0 && (
           <div className="mb-4 text-sm text-zinc-600 dark:text-zinc-400">
-            Found <span className="font-semibold text-zinc-900 dark:text-zinc-100">{shorts.length}</span> viral shorts
-            {metadata?.dataSource === 'mock' && (
-              <span className="ml-2 px-2 py-1 bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-300 rounded text-xs font-medium">
-                Demo Data
-              </span>
-            )}
+            Found <span className="font-semibold text-zinc-900 dark:text-zinc-100">{shorts.length}</span> real YouTube Shorts
           </div>
         )}
 

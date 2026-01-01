@@ -1,4 +1,4 @@
-export type UserTier = 'free' | 'pro';
+export type UserTier = 'free' | 'pro' | 'admin';
 
 export interface RateLimitInfo {
   allowed: boolean;
@@ -19,13 +19,14 @@ export class RateLimiter {
   private static FREE_TIER_NICHES = ['motivation', 'sports', 'gaming'];
 
   static checkRateLimit(tier: UserTier = 'free'): RateLimitInfo {
-    if (tier === 'pro') {
+    // Admin and Pro tiers have unlimited access
+    if (tier === 'admin' || tier === 'pro') {
       return {
         allowed: true,
         requestsToday: 0,
         requestsAllowed: -1, // Unlimited
         resetTime: this.getNextResetTime(),
-        tier: 'pro',
+        tier,
       };
     }
 
@@ -67,7 +68,7 @@ export class RateLimiter {
   }
 
   static isNicheAllowed(niche: string, tier: UserTier = 'free'): boolean {
-    if (tier === 'pro') {
+    if (tier === 'admin' || tier === 'pro') {
       return true;
     }
 
@@ -75,7 +76,7 @@ export class RateLimiter {
   }
 
   static getAllowedNiches(tier: UserTier = 'free'): string[] {
-    if (tier === 'pro') {
+    if (tier === 'admin' || tier === 'pro') {
       return ['all'];
     }
 

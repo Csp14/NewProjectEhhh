@@ -96,7 +96,9 @@ class YouTubeService {
   async searchShorts(
     query: string = 'shorts',
     maxResults: number = 50,
-    publishedAfter?: string
+    publishedAfter?: string,
+    regionCode: string = 'US',
+    relevanceLanguage: string = 'en'
   ): Promise<YouTubeVideo[]> {
     try {
       if (!this.apiKey) {
@@ -111,6 +113,8 @@ class YouTubeService {
         maxResults: maxResults.toString(),
         order: 'viewCount',
         q: query,
+        regionCode, // Configurable region (default: US)
+        relevanceLanguage, // Configurable language (default: en)
         ...(publishedAfter && { publishedAfter }),
       });
 

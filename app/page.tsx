@@ -55,6 +55,7 @@ export default function Home() {
     niche: 'all',
     timeRange: '6h',
     minViralScore: 0,
+    region: 'US',
   });
   const [lastUpdated, setLastUpdated] = useState<number>(Date.now());
   const [rateLimitInfo, setRateLimitInfo] = useState({
@@ -98,6 +99,7 @@ export default function Home() {
         niche: newFilters.niche,
         timeRange: newFilters.timeRange,
         minViralScore: newFilters.minViralScore.toString(),
+        region: newFilters.region,
         limit: '20',
       });
 

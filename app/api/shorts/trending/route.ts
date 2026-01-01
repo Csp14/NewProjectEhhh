@@ -6,16 +6,16 @@ import { CacheManager } from '@/app/lib/utils/cacheManager';
 import { MOCK_SHORTS } from '@/app/lib/mockData';
 
 const NICHE_SEARCH_TERMS: Record<string, string> = {
-  gaming: 'gaming shorts gameplay',
-  sports: 'sports highlights fitness',
-  drama: 'drama tea exposed',
-  motivation: 'motivation success mindset',
-  finance: 'money investing finance',
-  education: 'education learning science',
-  lifestyle: 'lifestyle vlog daily',
-  tech: 'tech technology review',
-  music: 'music beats song',
-  other: 'trending viral',
+  gaming: 'gaming shorts gameplay english streamer',
+  sports: 'sports highlights fitness workout usa',
+  drama: 'drama tea exposed storytime english',
+  motivation: 'motivation success mindset entrepreneur',
+  finance: 'money investing finance stocks crypto',
+  education: 'education learning tutorial explained',
+  lifestyle: 'lifestyle vlog daily routine usa',
+  tech: 'tech technology review gadget iphone',
+  music: 'music trending song viral tiktok',
+  other: 'trending viral shorts english',
 };
 
 interface ProcessedShort {
@@ -107,12 +107,18 @@ export async function GET(request: NextRequest) {
     try {
       // Try to fetch from YouTube API
       const searchQuery =
-        niche === 'all' ? 'shorts trending' : NICHE_SEARCH_TERMS[niche] || 'shorts';
+        niche === 'all' ? 'shorts trending english' : NICHE_SEARCH_TERMS[niche] || 'shorts';
+
+      // Get region preference (default to US for English content)
+      const region = searchParams.get('region') || 'US';
+      const language = searchParams.get('language') || 'en';
 
       const youtubeVideos = await youtubeService.searchShorts(
         searchQuery,
         limit * 2, // Fetch more to filter by viral score
-        publishedAfter
+        publishedAfter,
+        region,
+        language
       );
 
       // Process each video
